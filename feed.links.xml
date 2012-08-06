@@ -1,21 +1,27 @@
 ---
-layout: rss-feed
+layout: none
 ---
 <?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0">
-	<channel>
-		<title>{{ site.name }} - Links</title>
-		<description>{{ site.description }}</description>
-		<link>{{ site.url }}</link>
-		{% for post in site.posts %}
-			{% if post.link %}
-			<item>
-				<title>{{ post.title }}</title>
-				<description>{{ post.content | xml_escape }}</description>
-				<published>{{ post.date }}</published>
-				<link>{{ post.link | escape }}</link>
-			</item>
-			{% endif %}
-		{% endfor %}
-	</channel>
-</rss>
+<feed xml:lang="en" xmlns="http://www.w3.org/2005/Atom">
+  <title>{{ site.name | xml_escape}}</title>
+  <subtitle></subtitle>
+  <icon></icon>
+  <updated>{{ site.posts.first.date | date: "%Y-%m-%dT%H:%M:%SZ" }}</updated>
+  <id>{{ site.url }}feed.xml</id>
+  <link type="text/html" rel="alternate" href="{{ site.url }}"/>
+  {% for post in site.posts limit:10 %}
+    {% if post.link %}
+    <entry>
+      <title>{{ post.title | xml_escape}}</title>
+      <published>{{ post.date | date: "%Y-%m-%dT%H:%M:%SZ" }}</published>
+      <updated>{{ post.date | date: "%Y-%m-%dT%H:%M:%SZ" }}</updated>
+      <content type="html">{{ post.content | xml_escape }}</content>
+      <link type="text/html" rel="alternate" href="{{ post.link }}"/>
+      <id>{{ site.url }}{{ post.url }}</id>
+      <author>
+        <name>{{ site.author }}</name>
+      </author>
+    </entry>
+    {% endif %}
+  {% endfor %}
+</feed>
